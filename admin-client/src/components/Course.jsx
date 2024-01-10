@@ -61,10 +61,10 @@ function GrayTopper() {
 function UpdateCard() {
     const [courseDetails, setCourse] = useRecoilState(courseState);
 
-    const [title, setTitle] = useState();
-    const [description, setDescription] = useState();
-    const [image, setImage] = useState();
-    const [price, setPrice] = useState();
+    const [title, setTitle] = useState(courseDetails.course.title);
+    const [description, setDescription] = useState(courseDetails.course.description);
+    const [image, setImage] = useState(courseDetails.course.imageLink);
+    const [price, setPrice] = useState(courseDetails.course.price);
 
     useEffect(()=>{
         setTitle(courseDetails.course.title);

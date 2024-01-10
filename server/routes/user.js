@@ -1,8 +1,21 @@
+const mongoose = require("mongoose");
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const { authenticateJwt, SECRET } = require("../middleware/auth");
 const { User, Course, Admin } = require("../db");
 const router = express.Router();
 
+  router.get("/me", authenticateJwt, async (req, res) => {
+    const user = await User.findOne({ username: req.user.username });
+    if (!user) {
+      res.status(403).json({msg: "Admin doesnt exist"})
+      return
+    }
+    res.json({
+        username: user.username
+    })
+  });
+  
   router.post('/signup', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
@@ -17,7 +30,7 @@ const router = express.Router();
   });
   
   router.post('/login', async (req, res) => {
-    const { username, password } = req.headers;
+    const { username, password } = req.body;
     const user = await User.findOne({ username, password });
     if (user) {
       const token = jwt.sign({ username, role: 'user' }, SECRET, { expiresIn: '1h' });
@@ -58,4 +71,10 @@ const router = express.Router();
     }
   });
   
+  router.get('/course/:courseId', authenticateJwt, async (req, res) => {
+    const courseId = req.params.courseId;
+    const course = await Course.findById(courseId);
+    res.json({ course : course});
+  });
+
   module.exports = router

@@ -6,6 +6,7 @@ import axios from "axios";
 import {useNavigate} from "react-router-dom";
 import {useSetRecoilState} from "recoil";
 import {userState} from "../store/atoms/user.js";
+import { BASE_URL } from "../config.js";
 
 function Signin() {
     const [email, setEmail] = useState("")
@@ -21,15 +22,14 @@ function Signin() {
                 justifyContent: "center"
             }}>
                 <Typography variant={"h6"}>
-                Welcome to Coursera. Sign up below
+                Welcome to Coursera. Sign in below
                 </Typography>
             </div>
         <div style={{display: "flex", justifyContent: "center"}}>
             <Card varint={"outlined"} style={{width: 400, padding: 20}}>
                 <TextField
-                    onChange={(evant11) => {
-                        let elemt = evant11.target;
-                        setEmail(elemt.value);
+                    onChange={(event) => {
+                      setEmail(event.target.value);
                     }}
                     fullWidth={true}
                     label="Email"
@@ -54,12 +54,8 @@ function Signin() {
                         const res = await axios.post(`${BASE_URL}/admin/login`, {
                             username: email,
                             password: password
-                        }, {
-                            headers: {
-                                "Content-type": "application/json"
-                            }
                         });
-                        const data = res.data;
+                        let data = res.data;
 
                         localStorage.setItem("token", data.token);
                         // window.location = "/"
